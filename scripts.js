@@ -1,11 +1,21 @@
 let playerScore = 0;
 let computerScore = 0;
+let playerGames = 0;
+let computerGames = 0
 
-const getPlayerChoice = () => {
-    const weapons = ['rock', 'paper', 'scissors']
-    let choice = prompt('Choose rock, paper, or scissors: ').toLowerCase();
-    return choice;
-}
+const rpsbuttons = document.querySelectorAll('button');
+const results = document.querySelector('.results');
+const details = document.querySelector('.details');
+const player = document.querySelector('.player');
+const computer = document.querySelector('.computer');
+const gameTally = document.querySelector('.gameTally');
+
+rpsbuttons.forEach(button => {
+    button.addEventListener('click', () => {
+    let playerSelection = button.id;
+    playRound(playerSelection);
+    })
+})
 
 const getComputerChoice = () => {
     const weapons = ['rock', 'paper', 'scissors'];
@@ -13,19 +23,26 @@ const getComputerChoice = () => {
     return choice;
 }
 
-const playRound =  (playerSelection, computerSelection) => {
-    let winMessage = `You Win! Your ${playerSelection} beats the computer's ${computerSelection}!`;
-    let lostMessage = `You Lost! The computer's ${computerSelection} beats your ${playerSelection}!`;
-    let drawMessage = `Draw! You both chose ${playerSelection}!`;
+const playRound =  (playerSelection) => {
+    let computerSelection = getComputerChoice();
+    let winMessage = 'You Win!';
+    let winDetails = `Your ${playerSelection} beats the computer's ${computerSelection}!`;
+    let lostMessage = 'You Lost!' ;
+    let lostDetails = `The computer's ${computerSelection} beats your ${playerSelection}!`;
+    let drawMessage = 'Draw!'
+    let drawDetails =  `You both chose ${playerSelection}!`;
+    gameTally.textContent = `Player Wins: ${playerGames}   Computer Wins: ${computerGames}`
 
     const winRound = () => {
-        playerScore += 1;
-        alert(winMessage);
+        results.textContent = winMessage;
+        details.textContent = winDetails;
+        playerScore += 1;  
     }
     
     const loseRound = () => {
+        results.textContent = lostMessage;
+        details.textContent = lostDetails;
         computerScore += 1;
-        alert(lostMessage);
     }
 
     switch (true) {
@@ -48,27 +65,26 @@ const playRound =  (playerSelection, computerSelection) => {
             winRound();            
             break;
         default:
-            alert(drawMessage);
+            results.textContent = drawMessage;
+            details.textContent = drawDetails;
         }
 
-    alert("Player score: ", playerScore);
-    alert("Computer score: ", computerScore);
-}
-
-const game = () => {
-    for (let i = 0; i < 5; i++) {
-        let computerSelection = getComputerChoice();
-        let playerSelection = getPlayerChoice();
-        alert(`Round ${i + 1}`);
-        playRound(playerSelection, computerSelection);
-    }
-    if (playerScore > computerScore) {
-        alert("Congratulations! You are the winner!")
-    } else if (playerScore < computerScore) {
-        alert("Aww, that's too bad! You lose!")
-    } else {
-        alert("Looks like it's a draw.")
+    player.textContent = `Player score: ${playerScore}` 
+    computer.textContent = `Computer score: ${computerScore}`;
+    
+    if (playerScore === 5) {
+        results.textContent = 'Congratulations! You win!';
+        playerScore = 0
+        computerScore = 0
+        playerGames += 1
+        details.textContent = 'Thanks for playing!';
+    } else if (computerScore === 5) {
+        results.textContent = 'Aww! The computer wins this time!';
+        playerScore = 0
+        computerScore = 0
+        computerGames += 1
+        details.textContent = 'Thanks for playing!';
     }
 }
 
-game();
+
